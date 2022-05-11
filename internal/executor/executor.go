@@ -11,6 +11,7 @@ import (
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/meshplus/bitxhub-core/agency"
 	"github.com/meshplus/bitxhub-core/validator"
+	"github.com/meshplus/bitxhub-kit/crypto"
 	"github.com/meshplus/bitxhub-kit/types"
 	"github.com/meshplus/bitxhub-model/constant"
 	"github.com/meshplus/bitxhub-model/pb"
@@ -62,6 +63,7 @@ type BlockExecutor struct {
 	bxhGasPrice *big.Int
 	lock        *sync.Mutex
 	admins      []string
+	adminKey    crypto.PrivateKey
 }
 
 func (exec *BlockExecutor) GetBoltContracts() map[string]agency.Contract {
@@ -69,7 +71,8 @@ func (exec *BlockExecutor) GetBoltContracts() map[string]agency.Contract {
 }
 
 // New creates executor instance
-func New(chainLedger *ledger.Ledger, logger logrus.FieldLogger, client *appchain.Client, config *repo.Config, gasPrice *big.Int) (*BlockExecutor, error) {
+func New(chainLedger *ledger.Ledger, logger logrus.FieldLogger, client *appchain.Client,
+	config *repo.Config, gasPrice *big.Int, priv crypto.PrivateKey) (*BlockExecutor, error) {
 	ibtpVerify := proof.New(chainLedger, logger, config.ChainID, config.GasLimit)
 
 	txsExecutor, err := agency.GetExecutorConstructor(config.Executor.Type)
@@ -97,6 +100,7 @@ func New(chainLedger *ledger.Ledger, logger logrus.FieldLogger, client *appchain
 		bxhGasPrice:      gasPrice,
 		gasLimit:         config.GasLimit,
 		lock:             &sync.Mutex{},
+		adminKey:         priv,
 	}
 
 	for _, admin := range config.Genesis.Admins {

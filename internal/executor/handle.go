@@ -148,6 +148,12 @@ func (exec *BlockExecutor) processExecuteEvent(blockWrapper *BlockWrapper) *ledg
 	block.BlockHeader.StateRoot = journalHash
 	block.BlockHash = block.Hash()
 
+	signed, err := exec.adminKey.Sign(block.BlockHash.Bytes())
+	if err != nil {
+		exec.logger.Errorf("sign block %s failed: %w", block.BlockHash.String(), err)
+	}
+	block.Signature = signed
+
 	exec.logger.WithFields(logrus.Fields{
 		"tx_root":      block.BlockHeader.TxRoot.String(),
 		"receipt_root": block.BlockHeader.ReceiptRoot.String(),
