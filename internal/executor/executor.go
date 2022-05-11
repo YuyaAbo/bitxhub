@@ -251,6 +251,9 @@ func (exec *BlockExecutor) verifyProofs(blockWrapper *BlockWrapper) {
 						groupInvalidTx = append(groupInvalidTx, i*groupLen+j)
 						groupErrM[i*groupLen+j] = err.Error()
 					}
+					if tx.IsIBTP() {
+						txs[i*groupLen+j].(*pb.BxhTransaction).IBTP.Proof = nil
+					}
 					exec.logger.WithField("gasUsed", gasUsed).Debug("Verify proofs")
 				}
 			} else {
@@ -259,6 +262,9 @@ func (exec *BlockExecutor) verifyProofs(blockWrapper *BlockWrapper) {
 					if !ok {
 						groupInvalidTx = append(groupInvalidTx, i*groupLen+j)
 						groupErrM[i*groupLen+j] = err.Error()
+					}
+					if tx.IsIBTP() {
+						txs[i*groupLen+j].(*pb.BxhTransaction).IBTP.Proof = nil
 					}
 					exec.logger.WithField("gasUsed", gasUsed).Debug("Verify proofs")
 				}
