@@ -252,7 +252,7 @@ func (exec *BlockExecutor) verifyProofs(blockWrapper *BlockWrapper) {
 						groupErrM[i*groupLen+j] = err.Error()
 					}
 					if tx.IsIBTP() {
-						txs[i*groupLen+j].(*pb.BxhTransaction).IBTP.Proof = nil
+						tx.(*pb.BxhTransaction).Extra = nil
 					}
 					exec.logger.WithField("gasUsed", gasUsed).Debug("Verify proofs")
 				}
@@ -264,7 +264,7 @@ func (exec *BlockExecutor) verifyProofs(blockWrapper *BlockWrapper) {
 						groupErrM[i*groupLen+j] = err.Error()
 					}
 					if tx.IsIBTP() {
-						txs[i*groupLen+j].(*pb.BxhTransaction).IBTP.Proof = nil
+						tx.(*pb.BxhTransaction).Extra = nil
 					}
 					exec.logger.WithField("gasUsed", gasUsed).Debug("Verify proofs")
 				}
