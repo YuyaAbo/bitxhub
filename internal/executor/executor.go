@@ -295,7 +295,7 @@ func (exec *BlockExecutor) persistExecutionResult() {
 			"hash":   blockData.Block.BlockHash.String(),
 			"count":  len(blockData.Block.Transactions.Transactions),
 			"elapse": time.Since(now),
-		}).Debug("PersistExecutionResult block")
+		}).Info("PersistExecutionResult block")
 	}
 	exec.ledger.Close()
 }
